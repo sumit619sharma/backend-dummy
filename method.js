@@ -1,6 +1,7 @@
 const express = require('express');
-
+const fs = require('fs');
 const app = express();
+
 let users=[
     {
         name: "sumit",
@@ -31,10 +32,53 @@ app.use('/user',userRouter);
 app.use('/auth',authRouter);
 app.use('/admin',productRouter);
 app.use('/shop',shopRouter);
-// app.use((req,res)=>{
+app.get('/login',(req,res)=>{
+    res.sendFile('C:/Users/Asus/Desktop/backend/dummy/login.html')
+});
+
+app.post('/login',(req,res)=>{
+const text = req.body.username;
+localStorage.setItem('username',text);
+res.redirect('/');
+})
+
+app.get('/getdata',(req,res)=>{
+    fs.readFile('chatData.txt','utf8',(err,data)=>{
+        if(err){
+      console.log('error while reading data==',err);
+        }else{
+            res.send(data);
+        }
+    })
+})
+
+app.post('/',(req,res)=>{
+    let msg = req.body.message;
+    let user = localStorage.getItem('username');
+    let text =`${user}: ${msg}`
+     if(msg){
+        let path = 'C:/Users/Asus/Desktop/backend/dummy/chatData.txt'
+        fs.appendFile(path,text,(err)=>{
+            if(err){
+           console.log("error===",err);
+            }else{
+                console.log("data appended");
+                res.send("message posted successfully");
+            }
+        })
+     }
+})
+
+app.get('/',(req,res)=>{
+    res.sendFile('C:/Users/Asus/Desktop/backend/dummy/chat.html')
+})
+
+
+
+app.use((req,res)=>{
     
-//     res.status(404).sendFile('./404.html',{root:__dirname})
-//   })
+    res.status(404).sendFile('./404.html',{root:__dirname})
+  })
 
 authRouter
 .route('/signup')
@@ -83,7 +127,8 @@ function getUserById(req,res){
 }
 
   function getSignup(req,res){
-   res.sendFile('/public/index.html',{root:__dirname});
+   
+    res.sendFile('/public/index.html',{root:__dirname});
 }
 function postSignup(req,res){
     let data = req.body;

@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h2>login</h2>
+        <form >
+          
+            <label for="username">UserName:</label>
+            <input type="text" id="username" name="username" required>
+            <button id="btn">login</button>
+          
+        </form>
+      </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" ></script>
+ <script>
+    let btn = document.getElementById('btn');
+    btn.addEventListener('click',async (e)=>{
+   console.log("button clicked")
+        e.preventDefault();
+         let name = document.getElementById('username').value;
+    
+   
+    
+    
+   
+  //  console.log("detail==",detail);
+   let resp = await axios.post('/login',{username: name});
+
+        })
+ </script>
+</body>
+</html>
