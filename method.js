@@ -1,10 +1,6 @@
 const express = require('express');
 
 const app = express();
-
-app.listen(4000);
-app.use(express.json());
-
 let users=[
     {
         name: "sumit",
@@ -22,17 +18,23 @@ let users=[
         id: 3
     }
 ];
+app.listen(4000);
+app.use(express.json());
+
+
 
 let authRouter= express.Router();
 let userRouter = express.Router();
-let productRouter = express.Router();
+let productRouter = require('./routes/admin.js');
+let shopRouter = require('./routes/shop.js');
 app.use('/user',userRouter);
 app.use('/auth',authRouter);
-app.use('/product',productRouter);
-
-productRouter.route('/')
-.get(getProduct)
-.post(postProduct)
+app.use('/admin',productRouter);
+app.use('/shop',shopRouter);
+// app.use((req,res)=>{
+    
+//     res.status(404).sendFile('./404.html',{root:__dirname})
+//   })
 
 authRouter
 .route('/signup')
@@ -90,15 +92,7 @@ function postSignup(req,res){
           signDetail: data});
 }
 
-function getProduct(req,res){
-    res.sendFile('/public/product.html',{root: __dirname});
-}
 
-function postProduct(req,res){
-    const data = req.body;
-    console.log('productData==',data);
-    res.json({message: "product added"});
-}
 // app.get('/user',(req,res)=>{
 //     res.send(users);
 // })
