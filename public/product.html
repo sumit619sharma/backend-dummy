@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Product</h2>
+        <form >
+          
+            <label for="product">ProductName:</label>
+            <input type="text" id="product" name="username" required>
+            <label for="size">ProductSize:</label>
+            <input type="number" id="size" name="size" required>
+          
+            <button id="btn">Signp</button>
+          
+        </form>
+      </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" ></script>
+ <script>
+    let btn = document.getElementById('btn');
+    btn.addEventListener('click',async (e)=>{
+   console.log("button clicked")
+        e.preventDefault();
+         let name = document.getElementById('product').value;
+         let size = document.getElementById('size').value;
+           const detail = {
+    item: name,
+    productSize: size,
+   }
+   console.log("detail==",detail);
+   let resp = await axios.post('/product',detail);
+
+        })
+ </script>
+</body>
+</html>
