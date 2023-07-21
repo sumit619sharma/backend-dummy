@@ -19,17 +19,13 @@
  <script>
     let btn = document.getElementById('btn');
     btn.addEventListener('click',async (e)=>{
-   console.log("button clicked")
         e.preventDefault();
+        console.log("button clicked")
+        
          let name = document.getElementById('username').value;
-    
-   
-    
-    
-   
-  //  console.log("detail==",detail);
+      localStorage.setItem('username',name);
    let resp = await axios.post('/login',{username: name});
-
+console.log("login post resp==",resp);
         })
  </script>
 </body>

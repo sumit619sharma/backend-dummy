@@ -2,8 +2,9 @@ const express = require('express');
 
 const router  = express.Router();
 
-router.get('/page1',(req,res)=>{
-    res.send('<h1>Shopping page 1</h1>');
+router.get('/',(req,res)=>{
+     res.sendFile('C:/Users/Asus/Desktop/backend/dummy/views/shop.html')
+    
 })
 
 module.exports = router;

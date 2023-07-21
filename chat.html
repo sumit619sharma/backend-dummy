@@ -36,8 +36,9 @@
         })
         const allChat =async ()=>{
              let resp = await axios.get('/getdata');
-             let result = await resp.tex();
-         document.getElementById('allChat').innerHTML = data;
+            console.log('post msg response==',resp);
+             
+         document.getElementById('allChat').innerHTML = resp;
             }
  </script>
 </body>

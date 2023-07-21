@@ -1,6 +1,10 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
+const path = require('path');
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname,'public')))
 
 let users=[
     {
@@ -19,8 +23,9 @@ let users=[
         id: 3
     }
 ];
-app.listen(4000);
-app.use(express.json());
+
+app.listen(5000);
+//app.use(express.json());
 
 
 
@@ -28,56 +33,72 @@ let authRouter= express.Router();
 let userRouter = express.Router();
 let productRouter = require('./routes/admin.js');
 let shopRouter = require('./routes/shop.js');
+const { extend } = require('lodash');
+
 app.use('/user',userRouter);
-app.use('/auth',authRouter);
+ app.use('/auth',authRouter);
 app.use('/admin',productRouter);
 app.use('/shop',shopRouter);
 app.get('/login',(req,res)=>{
-    res.sendFile('C:/Users/Asus/Desktop/backend/dummy/login.html')
+    res.send(`<form action="/login" method="POST" onSubmit="localStorage.setItem('username',document.getElementById('user').value )" >
+    <input id="user" type="text" name="username">
+    <button type="submit">login</button> `)
 });
 
 app.post('/login',(req,res)=>{
 const text = req.body.username;
-localStorage.setItem('username',text);
+console.log("point to post of login",text)
+username=text;
 res.redirect('/');
+
 })
 
-app.get('/getdata',(req,res)=>{
-    fs.readFile('chatData.txt','utf8',(err,data)=>{
-        if(err){
-      console.log('error while reading data==',err);
-        }else{
-            res.send(data);
-        }
-    })
+app.get('/success', (req,res)=>{
+    res.send("form successfully filled");
 })
+
+
 
 app.post('/',(req,res)=>{
     let msg = req.body.message;
-    let user = localStorage.getItem('username');
-    let text =`${user}: ${msg}`
+    let id = req.body.user;
+   console.log('mesaage==',req.body);
+   console.log("user==",id);
+    let text =`${id}: ${msg}`
      if(msg){
-        let path = 'C:/Users/Asus/Desktop/backend/dummy/chatData.txt'
-        fs.appendFile(path,text,(err)=>{
+         
+        fs.appendFile('chatData.txt',text+'\n',(err)=>{
             if(err){
            console.log("error===",err);
             }else{
                 console.log("data appended");
-                res.send("message posted successfully");
+                //res.send("message posted successfully");
+                res.redirect('/');
             }
         })
      }
+     
 })
 
 app.get('/',(req,res)=>{
-    res.sendFile('C:/Users/Asus/Desktop/backend/dummy/chat.html')
+    console.log("in send path");
+    //res.sendFile('./chat.html',{root:__dirname})
+   fs.readFile('chatData.txt',(err,data)=>{
+    if(err){
+        data="no chat Exist";
+    }
+    
+   res.send(`${data}  <form action="/" method="POST" onSubmit="document.getElementById('hide').value = localStorage.getItem('username')" >
+   <label for="message">Send Message:</label> <input type="text" id="message" name="message" required><input type='hidden' id="hide"  name="user" >
+   <button id="btn">send</button></form>`)
+   })
 })
 
 
 
 app.use((req,res)=>{
     
-    res.status(404).sendFile('./404.html',{root:__dirname})
+    res.status(404).sendFile('C:/Users/Asus/Desktop/backend/dummy/views/404.html')
   })
 
 authRouter
@@ -127,8 +148,8 @@ function getUserById(req,res){
 }
 
   function getSignup(req,res){
-   
-    res.sendFile('/public/index.html',{root:__dirname});
+   console.log('get sign get called==',req.url)
+    res.sendFile('/authent/index.html',{root:__dirname});
 }
 function postSignup(req,res){
     let data = req.body;
